@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Carzula – Find Your Next Ride</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0b1f3a;
+  --navy-mid:#152d52;
+  --blue:#1a6bff;
+  --blue-light:#e8f0ff;
+  --accent:#ff5f1f;
+  --accent-light:#fff2ec;
+  --gold:#f5c842;
+  --text:#0d1b2a;
+  --muted:#5a6a7a;
+  --border:#dde4ed;
+  --bg:#f3f6fb;
+  --white:#ffffff;
+  --green:#1aaa6b;
+  --green-light:#e6f9f0;
+  --radius:14px;
+  --radius-sm:8px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* NAV */
+nav{background:var(--navy);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:66px;position:sticky;top:0;z-index:100}
+.nav-logo{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--white);letter-spacing:-0.5px}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{color:rgba(255,255,255,0.72);font-size:14px;font-weight:500;text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--white)}
+.nav-btn{background:var(--accent);color:var(--white);border:none;padding:9px 20px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.2s}
+.nav-btn:hover{background:#e04e0e}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 55%,#1a3060 100%);padding:70px 40px 0;position:relative;overflow:hidden;min-height:480px;display:flex;align-items:flex-start}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(26,107,255,0.18) 0%,transparent 60%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:var(--bg);clip-path:ellipse(60% 100% at 50% 100%)}
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;gap:60px;align-items:flex-end;z-index:1;position:relative}
+.hero-text{flex:1;padding-bottom:80px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,95,31,0.18);border:1px solid rgba(255,95,31,0.35);border-radius:50px;padding:5px 14px;margin-bottom:20px}
+.hero-eyebrow span{font-size:12px;font-weight:600;color:#ff8a5c;letter-spacing:1.5px;text-transform:uppercase}
+.hero h1{font-family:'Syne',sans-serif;font-size:52px;font-weight:800;color:var(--white);line-height:1.1;margin-bottom:16px;letter-spacing:-1px}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{font-size:16px;color:rgba(255,255,255,0.68);line-height:1.7;max-width:420px;margin-bottom:32px}
+.hero-stats{display:flex;gap:32px}
+.hero-stat-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--white)}
+.hero-stat-label{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px}
+.hero-car-visual{width:460px;position:relative;align-self:flex-end}
+.hero-car-visual img{width:100%;display:block}
+.hero-car-badge{position:absolute;top:30px;right:20px;background:var(--gold);color:#111;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;padding:8px 16px;border-radius:50px;letter-spacing:0.3px}
+
+/* SEARCH BAR */
+.search-section{max-width:1200px;margin:-30px auto 48px;padding:0 40px;position:relative;z-index:10}
+.search-card{background:var(--white);border-radius:20px;padding:24px 28px;box-shadow:0 8px 40px rgba(11,31,58,0.12);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.search-field{flex:1;min-width:180px;position:relative}
+.search-field label{display:block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.search-field select,.search-field input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);outline:none;appearance:none;cursor:pointer;transition:border-color 0.2s}
+.search-field select:focus,.search-field input:focus{border-color:var(--blue)}
+.search-field.sel-wrap{position:relative}
+.search-field.sel-wrap::after{content:'▾';position:absolute;right:14px;bottom:13px;font-size:12px;color:var(--muted);pointer-events:none}
+.search-divider{width:1px;height:60px;background:var(--border);align-self:flex-end;margin-bottom:0}
+.search-btn{background:var(--blue);color:var(--white);border:none;padding:13px 32px;border-radius:12px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;align-self:flex-end;margin-bottom:1px;transition:background 0.2s,transform 0.15s;letter-spacing:0.3px}
+.search-btn:hover{background:#1458e0;transform:translateY(-1px)}
+
+/* FILTER TABS */
+.filter-section{max-width:1200px;margin:0 auto 32px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.filter-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.filter-tab{padding:8px 18px;border-radius:50px;font-size:13px;font-weight:500;border:1.5px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;transition:all 0.2s}
+.filter-tab.active,.filter-tab:hover{background:var(--blue);color:var(--white);border-color:var(--blue)}
+.sort-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.sort-row select{border:1.5px solid var(--border);border-radius:8px;padding:7px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--white);outline:none;cursor:pointer}
+
+/* LISTINGS GRID */
+.listings-section{max-width:1200px;margin:0 auto;padding:0 40px 80px}
+.listings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+
+/* CAR CARD */
+.car-card{background:var(--white);border-radius:var(--radius);overflow:hidden;border:1.5px solid var(--border);transition:transform 0.2s,box-shadow 0.2s;cursor:pointer}
+.car-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(11,31,58,0.12)}
+.car-img-wrap{position:relative;background:#e8edf5;height:195px;overflow:hidden}
+.car-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s}
+.car-card:hover .car-img-wrap img{transform:scale(1.04)}
+.car-badge{position:absolute;top:12px;left:12px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:50px;letter-spacing:0.5px}
+.badge-new{background:var(--blue);color:var(--white)}
+.badge-hot{background:var(--accent);color:var(--white)}
+.badge-deal{background:var(--green);color:var(--white)}
+.car-fav{position:absolute;top:12px;right:12px;width:32px;height:32px;background:rgba(255,255,255,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;border:none;cursor:pointer;transition:background 0.2s}
+.car-fav:hover{background:var(--white)}
+.car-fav.liked{color:#e24b4a}
+.car-body{padding:18px 20px 20px}
+.car-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3}
+.car-trim{font-size:13px;color:var(--muted);margin-bottom:14px}
+.car-specs{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.car-spec{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.spec-icon{font-size:14px}
+.car-price-row{display:flex;align-items:center;justify-content:space-between}
+.car-price{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text)}
+.car-price sub{font-size:13px;font-weight:500;color:var(--muted);font-family:'DM Sans',sans-serif}
+.car-monthly{font-size:12px;color:var(--muted);margin-top:1px}
+.car-cta{background:var(--blue-light);color:var(--blue);border:none;padding:9px 16px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.2s}
+.car-cta:hover{background:var(--blue);color:var(--white)}
+
+/* FEATURE STRIP */
+.feature-strip{background:var(--navy);padding:60px 40px}
+.feature-strip-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+.feat-item{text-align:center}
+.feat-icon{width:52px;height:52px;background:rgba(26,107,255,0.18);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px}
+.feat-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--white);margin-bottom:6px}
+.feat-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6}
+
+/* FOOTER */
+footer{background:var(--navy-mid);padding:32px 40px;text-align:center}
+footer p{font-size:13px;color:rgba(255,255,255,0.4)}
+footer span{color:var(--accent)}
+
+/* MODAL OVERLAY (faux viewport) */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--white);border-radius:20px;max-width:640px;width:calc(100% - 40px);max-height:90vh;overflow-y:auto;padding:0;position:relative}
+.modal-img{width:100%;height:240px;object-fit:cover;border-radius:20px 20px 0 0}
+.modal-body{padding:28px 32px 32px}
+.modal-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.9);border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10}
+.modal-make{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.modal-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--text);margin-bottom:4px}
+.modal-trim{font-size:14px;color:var(--muted);margin-bottom:20px}
+.modal-price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:24px}
+.modal-price{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--text)}
+.modal-monthly{font-size:13px;color:var(--muted)}
+.modal-specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.modal-spec-item{background:var(--bg);border-radius:10px;padding:12px 14px}
+.modal-spec-label{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.modal-spec-val{font-size:14px;font-weight:600;color:var(--text)}
+.modal-desc{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px}
+.modal-btn-row{display:flex;gap:12px}
+.modal-btn-primary{flex:1;background:var(--blue);color:var(--white);border:none;padding:14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s}
+.modal-btn-primary:hover{background:#1458e0}
+.modal-btn-sec{flex:1;background:var(--bg);color:var(--text);border:1.5px solid var(--border);padding:14px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:background 0.2s}
+.modal-btn-sec:hover{background:var(--border)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.car-card{animation:fadeUp 0.4s ease both}
+.listings-grid .car-card:nth-child(2){animation-delay:.05s}
+.listings-grid .car-card:nth-child(3){animation-delay:.1s}
+.listings-grid .car-card:nth-child(4){animation-delay:.15s}
+.listings-grid .car-card:nth-child(5){animation-delay:.2s}
+.listings-grid .car-card:nth-child(6){animation-delay:.25s}
+.listings-grid .car-card:nth-child(7){animation-delay:.3s}
+.listings-grid .car-card:nth-child(8){animation-delay:.35s}
+
+/* RESPONSIVE */
+@media(max-width:860px){
+  nav{padding:0 20px}.hero{padding:50px 20px 0}.hero h1{font-size:36px}
+  .hero-inner{flex-direction:column;gap:20px}.hero-car-visual{width:100%;max-width:380px}
+  .search-section{padding:0 20px}.filter-section{padding:0 20px}.listings-section{padding:0 20px 60px}
+  .feature-strip{padding:40px 20px}.feature-strip-inner{grid-template-columns:1fr 1fr}
+  .search-card{flex-direction:column;align-items:stretch}.search-divider{display:none}
+  .search-btn{width:100%;padding:14px}
+}
+@media(max-width:540px){
+  .hero h1{font-size:30px}.listings-grid{grid-template-columns:1fr}
+  .feature-strip-inner{grid-template-columns:1fr}
+  .hero-stats{gap:20px}
+  .modal-specs-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Car<span>zula</span></div>
+  <div class="nav-links">
+    <a href="#">Browse Cars</a>
+    <a href="#">Sell My Car</a>
+    <a href="#">Finance</a>
+    <a href="#">About</a>
+    <button class="nav-btn">Sign In</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow"><span>🔥 &nbsp;2,400+ Cars Ready Now</span></div>
+      <h1>Find Your <em>Dream Ride</em><br/>No Dealership Games</h1>
+      <p>Browse thousands of inspected, certified used cars. Real prices. Zero pressure. Delivered to your door.</p>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num">2,400+</div>
+          <div class="hero-stat-label">Cars Listed</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">150+</div>
+          <div class="hero-stat-label">Makes & Models</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">4.9★</div>
+          <div class="hero-stat-label">Avg. Rating</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-car-visual">
+      <div class="hero-car-badge">Free Delivery 🚚</div>
+      <!-- SVG illustration of a car silhouette -->
+      <svg viewBox="0 0 460 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <defs>
+          <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2e6dff" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#1a3d99" stop-opacity="1"/>
+          </linearGradient>
+          <linearGradient id="shadowGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0b1f3a" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#0b1f3a" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <!-- Ground shadow -->
+        <ellipse cx="230" cy="200" rx="190" ry="16" fill="url(#shadowGrad)"/>
+        <!-- Car body lower -->
+        <rect x="30" y="140" width="400" height="52" rx="10" fill="url(#bodyGrad)"/>
+        <!-- Car body upper cabin -->
+        <path d="M100 140 Q130 80 180 68 L290 68 Q340 68 360 140 Z" fill="url(#bodyGrad)"/>
+        <!-- Windshield -->
+        <path d="M165 138 Q175 95 195 82 L275 82 Q295 95 300 138 Z" fill="rgba(150,210,255,0.35)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+        <!-- Side windows -->
+        <path d="M108 138 Q115 108 140 100 L162 100 L162 138 Z" fill="rgba(150,210,255,0.25)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <path d="M302 138 L302 100 L322 100 Q348 108 355 138 Z" fill="rgba(150,210,255,0.25)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <!-- Door lines -->
+        <line x1="230" y1="140" x2="230" y2="190" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+        <line x1="150" y1="140" x2="150" y2="190" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <line x1="310" y1="140" x2="310" y2="190" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <!-- Door handles -->
+        <rect x="183" y="162" width="24" height="5" rx="2.5" fill="rgba(255,255,255,0.4)"/>
+        <rect x="253" y="162" width="24" height="5" rx="2.5" fill="rgba(255,255,255,0.4)"/>
+        <!-- Front/rear bumper accents -->
+        <rect x="30" y="185" width="60" height="8" rx="4" fill="rgba(255,255,255,0.15)"/>
+        <rect x="370" y="185" width="60" height="8" rx="4" fill="rgba(255,255,255,0.15)"/>
+        <!-- Headlights -->
+        <rect x="36" y="152" width="40" height="14" rx="7" fill="#f5c842" opacity="0.9"/>
+        <rect x="384" y="152" width="40" height="14" rx="7" fill="#ff5f1f" opacity="0.8"/>
+        <!-- Wheel arches -->
+        <ellipse cx="110" cy="192" rx="48" ry="48" fill="#0b1f3a"/>
+        <ellipse cx="350" cy="192" rx="48" ry="48" fill="#0b1f3a"/>
+        <!-- Tires -->
+        <ellipse cx="110" cy="193" rx="42" ry="42" fill="#1a1a2e"/>
+        <ellipse cx="350" cy="193" rx="42" ry="42" fill="#1a1a2e"/>
+        <!-- Rims -->
+        <ellipse cx="110" cy="193" rx="24" ry="24" fill="#334"/>
+        <ellipse cx="350" cy="193" rx="24" ry="24" fill="#334"/>
+        <ellipse cx="110" cy="193" rx="14" ry="14" fill="#556"/>
+        <ellipse cx="350" cy="193" rx="14" ry="14" fill="#556"/>
+        <!-- Rim spokes -->
+        <line x1="110" y1="169" x2="110" y2="183" stroke="rgba(200,210,230,0.6)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="110" y1="203" x2="110" y2="217" stroke="rgba(200,210,230,0.6)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="86" y1="193" x2="100" y2="193" stroke="rgba(200,210,230,0.6)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="120" y1="193" x2="134" y2="193" stroke="rgba(200,210,230,0.6)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="350" y1="169" x2="350" y2="183" stroke="rgba(200,210,230,0.6)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="350" y1="203" x2="350" y2="217" stroke="rgba(200,210,230,0.6)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="326" y1="193" x2="340" y2="193" stroke="rgba(200,210,230,0.6)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="360" y1="193" x2="374" y2="193" stroke="rgba(200,210,230,0.6)" stroke-width="3" stroke-linecap="round"/>
+        <!-- Roof rack accent -->
+        <rect x="175" y="68" width="110" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
+        <!-- Logo on hood -->
+        <text x="230" y="178" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="11" fill="rgba(255,255,255,0.4)" letter-spacing="2">CARZULA</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH BAR -->
+<section class="search-section">
+  <div class="search-card">
+    <div class="search-field sel-wrap">
+      <label>Make</label>
+      <select id="filterMake">
+        <option value="">Any Make</option>
+        <option>Toyota</option>
+        <option>Honda</option>
+        <option>Ford</option>
+        <option>BMW</option>
+        <option>Tesla</option>
+        <option>Chevrolet</option>
+        <option>Jeep</option>
+        <option>Hyundai</option>
+      </select>
+    </div>
+    <div class="search-divider"></div>
+    <div class="search-field sel-wrap">
+      <label>Year</label>
+      <select id="filterYear">
+        <option value="">Any Year</option>
+        <option>2024</option>
+        <option>2023</option>
+        <option>2022</option>
+        <option>2021</option>
+        <option>2020</option>
+        <option>2019</option>
+        <option>2018</option>
+      </select>
+    </div>
+    <div class="search-divider"></div>
+    <div class="search-field sel-wrap">
+      <label>Price Range</label>
+      <select id="filterPrice">
+        <option value="">Any Price</option>
+        <option value="0-15000">Under $15,000</option>
+        <option value="15000-25000">$15k – $25k</option>
+        <option value="25000-40000">$25k – $40k</option>
+        <option value="40000-999999">$40k+</option>
+      </select>
+    </div>
+    <div class="search-divider"></div>
+    <div class="search-field sel-wrap">
+      <label>Body Type</label>
+      <select id="filterBody">
+        <option value="">Any Type</option>
+        <option>SUV</option>
+        <option>Sedan</option>
+        <option>Truck</option>
+        <option>Coupe</option>
+        <option>Electric</option>
+      </select>
+    </div>
+    <button class="search-btn" onclick="applyFilters()">Search Cars →</button>
+  </div>
+</section>
+
+<!-- FILTER TABS & SORT -->
+<section class="filter-section">
+  <div class="filter-tabs" id="filterTabs">
+    <button class="filter-tab active" onclick="setTab(this,'All')">All Cars</button>
+    <button class="filter-tab" onclick="setTab(this,'SUV')">SUVs</button>
+    <button class="filter-tab" onclick="setTab(this,'Sedan')">Sedans</button>
+    <button class="filter-tab" onclick="setTab(this,'Truck')">Trucks</button>
+    <button class="filter-tab" onclick="setTab(this,'Electric')">Electric</button>
+    <button class="filter-tab" onclick="setTab(this,'Coupe')">Coupes</button>
+  </div>
+  <div class="sort-row">
+    <span>Sort by:</span>
+    <select onchange="sortListings(this.value)">
+      <option value="featured">Featured</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="year-desc">Newest First</option>
+      <option value="mileage-asc">Lowest Mileage</option>
+    </select>
+  </div>
+</section>
+
+<!-- LISTINGS -->
+<section class="listings-section">
+  <div class="listings-grid" id="listingsGrid"></div>
+</section>
+
+<!-- FEATURE STRIP -->
+<section class="feature-strip">
+  <div class="feature-strip-inner">
+    <div class="feat-item">
+      <div class="feat-icon">🔍</div>
+      <div class="feat-title">150-Point Inspection</div>
+      <div class="feat-desc">Every car thoroughly checked before it ever hits our listings.</div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">🚚</div>
+      <div class="feat-title">Free Home Delivery</div>
+      <div class="feat-desc">We bring the car to you — test drive in your own driveway.</div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">🔄</div>
+      <div class="feat-title">7-Day Returns</div>
+      <div class="feat-desc">Not feeling it? Return it within 7 days, no questions asked.</div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">💳</div>
+      <div class="feat-title">Easy Financing</div>
+      <div class="feat-desc">Get pre-qualified in minutes. No impact to your credit score.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 <span>Carzula</span> — All Rights Reserved. Built for car lovers, by car lovers.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <svg id="modalCarSvg" viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:240px;border-radius:20px 20px 0 0;display:block"></svg>
+    <div class="modal-body">
+      <div class="modal-make" id="modalMake"></div>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-trim" id="modalTrim"></div>
+      <div class="modal-price-row">
+        <div class="modal-price" id="modalPrice"></div>
+        <div class="modal-monthly" id="modalMonthly"></div>
+      </div>
+      <div class="modal-specs-grid" id="modalSpecs"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-btn-row">
+        <button class="modal-btn-primary">Get Pre-Qualified →</button>
+        <button class="modal-btn-sec" onclick="closeModal()">Save for Later</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cars = [
+  {id:1,make:'Toyota',model:'Camry',year:2022,trim:'XSE V6',body:'Sedan',price:28500,mileage:22000,mpg:28,color:'Midnight Black',engine:'3.5L V6',transmission:'8-Speed Auto',badge:'deal',desc:'A sportier take on the legendary Camry. The XSE V6 delivers 301 hp wrapped in aggressive styling with paddle shifters and sport-tuned suspension.',carColor:'#1a1a2e',accentColor:'#f5c842'},
+  {id:2,make:'Ford',model:'F-150',year:2023,trim:'XLT 4x4',body:'Truck',price:42900,mileage:11000,mpg:22,color:'Oxford White',engine:'2.7L EcoBoost V6',transmission:'10-Speed Auto',badge:'new',desc:'Americas best-selling truck for 46 years running. Tows up to 9,000 lbs with class-leading technology and a bed made for work or play.',carColor:'#e8edf5',accentColor:'#1a6bff'},
+  {id:3,make:'Tesla',model:'Model Y',year:2023,trim:'Long Range AWD',body:'Electric',price:51200,mileage:8500,mpg:null,color:'Pearl White',engine:'Dual Motor Electric',transmission:'Single-Speed',badge:'hot',desc:'358 miles of range, 0-60 in 4.8 seconds, and over-the-air updates that keep getting better. The future of family SUVs is already here.',carColor:'#f5f5f5',accentColor:'#e24b4a'},
+  {id:4,make:'Honda',model:'CR-V',year:2021,trim:'EX-L AWD',body:'SUV',price:26400,mileage:34000,mpg:32,color:'Sonic Gray Pearl',engine:'1.5L Turbo 4-cyl',transmission:'CVT',badge:'deal',desc:'Honda reliability meets practical luxury. Leather-trimmed seats, panoramic sunroof, and Honda Sensing safety suite standard.',carColor:'#7a8a9a',accentColor:'#1aaa6b'},
+  {id:5,make:'BMW',model:'3 Series',year:2022,trim:'330i xDrive',body:'Sedan',price:39800,mileage:18500,mpg:30,color:'Alpine White',engine:'2.0L Turbo 4-cyl',transmission:'8-Speed Sport Auto',badge:'hot',desc:'The benchmark sports sedan with 255 hp, xDrive all-wheel drive, and that unmistakable Bavarian driving feel. Sport package included.',carColor:'#f8f8f8',accentColor:'#0b1f3a'},
+  {id:6,make:'Jeep',model:'Wrangler',year:2022,trim:'Rubicon 4xe',body:'SUV',price:54100,mileage:15000,mpg:null,color:'Sarge Green',engine:'2.0L Turbo Hybrid',transmission:'8-Speed Auto',badge:'new',desc:'The most capable Wrangler ever made goes hybrid. Rock-crawl on electric power or open the top and enjoy 21 miles of zero-emission fun.',carColor:'#4a5e3a',accentColor:'#f5c842'},
+  {id:7,make:'Chevrolet',model:'Camaro',year:2021,trim:'SS 1LE',body:'Coupe',price:38600,mileage:12000,mpg:20,color:'Rally Green',engine:'6.2L V8',transmission:'6-Speed Manual',badge:'hot',desc:'450 naturally aspirated horses, a Brembo brake package, and magnetic ride control. This is American muscle at its most focused.',carColor:'#2a5e2a',accentColor:'#ff5f1f'},
+  {id:8,make:'Hyundai',model:'Tucson',year:2023,trim:'N-Line AWD',body:'SUV',price:31200,mileage:9800,mpg:29,color:'Amazon Gray',engine:'1.6L Turbo 4-cyl',transmission:'7-Speed DCT',badge:'new',desc:'Sport-tuned suspension, 18" black alloys, and a cabin full of tech. The Tucson N-Line proves affordable can still be exciting.',carColor:'#555e6a',accentColor:'#1a6bff'},
+];
+
+let activeTab = 'All';
+let activeFaves = new Set();
+let displayedCars = [...cars];
+
+function formatPrice(p){return '$'+p.toLocaleString()}
+function monthly(p){return '$'+(Math.round(p/60+p*0.007)).toLocaleString()+'/mo est.'}
+
+const carColors = {
+  'Midnight Black':'#1a1a2e','Oxford White':'#e8edf5','Pearl White':'#f0f2f5',
+  'Sonic Gray Pearl':'#7a8a9a','Alpine White':'#f8f8f8','Sarge Green':'#4a5e3a',
+  'Rally Green':'#2a5e2a','Amazon Gray':'#555e6a'
+};
+
+function drawCarSVG(container, car){
+  const cc = car.carColor;
+  const ac = car.accentColor;
+  const svg = `<defs>
+    <linearGradient id="bg${car.id}" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8edf5"/><stop offset="100%" stop-color="#d0d8e8"/>
+    </linearGradient>
+    <linearGradient id="bd${car.id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${cc}" stop-opacity="1"/>
+      <stop offset="100%" stop-color="${cc}" stop-opacity="0.75"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="240" fill="url(#bg${car.id})"/>
+  <ellipse cx="320" cy="218" rx="240" ry="18" fill="rgba(0,0,0,0.12)"/>
+  <rect x="40" y="155" width="560" height="58" rx="12" fill="url(#bd${car.id})"/>
+  <path d="M130 155 Q165 85 220 72 L420 72 Q475 85 510 155 Z" fill="url(#bd${car.id})"/>
+  <path d="M218 153 Q228 100 248 88 L392 88 Q412 100 422 153 Z" fill="rgba(160,220,255,0.3)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <path d="M138 153 Q148 115 172 106 L214 106 L214 153 Z" fill="rgba(160,220,255,0.22)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <path d="M426 153 L426 106 L468 106 Q492 115 500 153 Z" fill="rgba(160,220,255,0.22)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <line x1="320" y1="155" x2="320" y2="210" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+  <line x1="200" y1="155" x2="200" y2="210" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+  <line x1="440" y1="155" x2="440" y2="210" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+  <rect x="244" y="178" width="30" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
+  <rect x="366" y="178" width="30" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
+  <rect x="40" y="196" width="76" height="10" rx="5" fill="${ac}" opacity="0.85"/>
+  <rect x="524" y="196" width="76" height="10" rx="5" fill="${ac}" opacity="0.7"/>
+  <ellipse cx="148" cy="213" rx="50" ry="50" fill="#0b1f3a"/>
+  <ellipse cx="492" cy="213" rx="50" ry="50" fill="#0b1f3a"/>
+  <ellipse cx="148" cy="213" rx="43" ry="43" fill="#111122"/>
+  <ellipse cx="492" cy="213" rx="43" ry="43" fill="#111122"/>
+  <ellipse cx="148" cy="213" rx="26" ry="26" fill="#2a2a3e"/>
+  <ellipse cx="492" cy="213" rx="26" ry="26" fill="#2a2a3e"/>
+  <ellipse cx="148" cy="213" rx="14" ry="14" fill="#444466"/>
+  <ellipse cx="492" cy="213" rx="14" ry="14" fill="#444466"/>
+  <line x1="148" y1="187" x2="148" y2="199" stroke="rgba(200,210,235,0.65)" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="148" y1="227" x2="148" y2="239" stroke="rgba(200,210,235,0.65)" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="122" y1="213" x2="134" y2="213" stroke="rgba(200,210,235,0.65)" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="162" y1="213" x2="174" y2="213" stroke="rgba(200,210,235,0.65)" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="492" y1="187" x2="492" y2="199" stroke="rgba(200,210,235,0.65)" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="492" y1="227" x2="492" y2="239" stroke="rgba(200,210,235,0.65)" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="466" y1="213" x2="478" y2="213" stroke="rgba(200,210,235,0.65)" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="506" y1="213" x2="518" y2="213" stroke="rgba(200,210,235,0.65)" stroke-width="3.5" stroke-linecap="round"/>
+  <text x="320" y="196" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="12" fill="rgba(255,255,255,0.3)" letter-spacing="3">${car.year} ${car.model.toUpperCase()}</text>`;
+  container.innerHTML = svg;
+}
+
+function renderCards(list){
+  const grid = document.getElementById('listingsGrid');
+  grid.innerHTML = '';
+  if(list.length===0){
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--muted);font-size:15px;">No cars match your filters. Try adjusting your search.</p>';
+    return;
+  }
+  list.forEach((car,i)=>{
+    const isFav = activeFaves.has(car.id);
+    const badgeMap = {new:'badge-new',hot:'badge-hot',deal:'badge-deal'};
+    const badgeLabel = {new:'New',hot:'🔥 Hot',deal:'Great Deal'};
+    const mpgText = car.mpg ? car.mpg+' MPG' : '⚡ Electric';
+    const card = document.createElement('div');
+    card.className = 'car-card';
+    card.style.animationDelay = (i*0.06)+'s';
+    card.innerHTML = `
+      <div class="car-img-wrap" onclick="openModal(${car.id})">
+        <svg viewBox="0 0 380 195" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:195px;display:block">
+          <defs>
+            <linearGradient id="cbg${car.id}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#dde4f0"/><stop offset="100%" stop-color="#c8d2e4"/>
+            </linearGradient>
+            <linearGradient id="cbd${car.id}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="${car.carColor}"/><stop offset="100%" stop-color="${car.carColor}" stop-opacity="0.75"/>
+            </linearGradient>
+          </defs>
+          <rect width="380" height="195" fill="url(#cbg${car.id})"/>
+          <ellipse cx="190" cy="178" rx="155" ry="14" fill="rgba(0,0,0,0.1)"/>
+          <rect x="18" y="118" width="344" height="50" rx="9" fill="url(#cbd${car.id})"/>
+          <path d="M72 118 Q97 65 128 56 L252 56 Q283 65 308 118 Z" fill="url(#cbd${car.id})"/>
+          <path d="M126 116 Q135 76 150 66 L230 66 Q245 76 254 116 Z" fill="rgba(155,215,255,0.3)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+          <path d="M80 116 Q88 88 105 82 L122 82 L122 116 Z" fill="rgba(155,215,255,0.2)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <path d="M258 116 L258 82 L276 82 Q293 88 300 116 Z" fill="rgba(155,215,255,0.2)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <rect x="148" y="134" width="22" height="5" rx="2.5" fill="rgba(255,255,255,0.3)"/>
+          <rect x="210" y="134" width="22" height="5" rx="2.5" fill="rgba(255,255,255,0.3)"/>
+          <rect x="18" y="156" width="52" height="8" rx="4" fill="${car.accentColor}" opacity="0.8"/>
+          <rect x="310" y="156" width="52" height="8" rx="4" fill="${car.accentColor}" opacity="0.65"/>
+          <ellipse cx="86" cy="172" rx="32" ry="32" fill="#0b1f3a"/>
+          <ellipse cx="294" cy="172" rx="32" ry="32" fill="#0b1f3a"/>
+          <ellipse cx="86" cy="172" rx="27" ry="27" fill="#111"/>
+          <ellipse cx="294" cy="172" rx="27" ry="27" fill="#111"/>
+          <ellipse cx="86" cy="172" rx="16" ry="16" fill="#2a2a3e"/>
+          <ellipse cx="294" cy="172" rx="16" ry="16" fill="#2a2a3e"/>
+          <ellipse cx="86" cy="172" rx="9" ry="9" fill="#444"/>
+          <ellipse cx="294" cy="172" rx="9" ry="9" fill="#444"/>
+          <line x1="86" y1="156" x2="86" y2="164" stroke="rgba(200,215,240,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="86" y1="180" x2="86" y2="188" stroke="rgba(200,215,240,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="70" y1="172" x2="78" y2="172" stroke="rgba(200,215,240,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="94" y1="172" x2="102" y2="172" stroke="rgba(200,215,240,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="294" y1="156" x2="294" y2="164" stroke="rgba(200,215,240,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="294" y1="180" x2="294" y2="188" stroke="rgba(200,215,240,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="278" y1="172" x2="286" y2="172" stroke="rgba(200,215,240,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="302" y1="172" x2="310" y2="172" stroke="rgba(200,215,240,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="190" y="152" text-anchor="middle" font-family="Syne,sans-serif" font-weight="700" font-size="9" fill="rgba(255,255,255,0.28)" letter-spacing="2">${car.year} ${car.model.toUpperCase()}</text>
+        </svg>
+        <span class="car-badge ${badgeMap[car.badge]}">${badgeLabel[car.badge]}</span>
+        <button class="car-fav${isFav?' liked':''}" onclick="toggleFav(event,${car.id})">${isFav?'❤️':'🤍'}</button>
+      </div>
+      <div class="car-body">
+        <div class="car-title">${car.year} ${car.make} ${car.model}</div>
+        <div class="car-trim">${car.trim} · ${car.color}</div>
+        <div class="car-specs">
+          <div class="car-spec"><span class="spec-icon">📍</span>${car.mileage.toLocaleString()} mi</div>
+          <div class="car-spec"><span class="spec-icon">⛽</span>${mpgText}</div>
+          <div class="car-spec"><span class="spec-icon">⚙️</span>${car.transmission.split(' ')[0]}</div>
+        </div>
+        <div class="car-price-row">
+          <div>
+            <div class="car-price">${formatPrice(car.price)}</div>
+            <div class="car-monthly">${monthly(car.price)}</div>
+          </div>
+          <button class="car-cta" onclick="openModal(${car.id})">View Details</button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function setTab(el, type){
+  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  activeTab = type;
+  applyFilters();
+}
+
+function applyFilters(){
+  const make = document.getElementById('filterMake').value;
+  const year = document.getElementById('filterYear').value;
+  const price = document.getElementById('filterPrice').value;
+  const body = document.getElementById('filterBody').value;
+  let list = cars.filter(c=>{
+    if(activeTab !== 'All' && c.body !== activeTab) return false;
+    if(make && c.make !== make) return false;
+    if(year && c.year !== parseInt(year)) return false;
+    if(body && c.body !== body) return false;
+    if(price){
+      const [mn,mx] = price.split('-').map(Number);
+      if(c.price < mn || c.price > mx) return false;
+    }
+    return true;
+  });
+  displayedCars = list;
+  renderCards(list);
+}
+
+function sortListings(val){
+  let list = [...displayedCars];
+  if(val==='price-asc') list.sort((a,b)=>a.price-b.price);
+  else if(val==='price-desc') list.sort((a,b)=>b.price-a.price);
+  else if(val==='year-desc') list.sort((a,b)=>b.year-a.year);
+  else if(val==='mileage-asc') list.sort((a,b)=>a.mileage-b.mileage);
+  renderCards(list);
+}
+
+function toggleFav(e, id){
+  e.stopPropagation();
+  if(activeFaves.has(id)) activeFaves.delete(id); else activeFaves.add(id);
+  applyFilters();
+}
+
+function openModal(id){
+  const car = cars.find(c=>c.id===id);
+  if(!car) return;
+  document.getElementById('modalMake').textContent = car.make.toUpperCase();
+  document.getElementById('modalTitle').textContent = car.year+' '+car.make+' '+car.model;
+  document.getElementById('modalTrim').textContent = car.trim+' · '+car.color;
+  document.getElementById('modalPrice').textContent = formatPrice(car.price);
+  document.getElementById('modalMonthly').textContent = monthly(car.price);
+  document.getElementById('modalDesc').textContent = car.desc;
+  const mpgText = car.mpg ? car.mpg+' MPG Combined' : 'Electric (0 emissions)';
+  document.getElementById('modalSpecs').innerHTML = `
+    <div class="modal-spec-item"><div class="modal-spec-label">Mileage</div><div class="modal-spec-val">${car.mileage.toLocaleString()} miles</div></div>
+    <div class="modal-spec-item"><div class="modal-spec-label">Engine</div><div class="modal-spec-val">${car.engine}</div></div>
+    <div class="modal-spec-item"><div class="modal-spec-label">Transmission</div><div class="modal-spec-val">${car.transmission}</div></div>
+    <div class="modal-spec-item"><div class="modal-spec-label">Fuel Economy</div><div class="modal-spec-val">${mpgText}</div></div>
+    <div class="modal-spec-item"><div class="modal-spec-label">Body Type</div><div class="modal-spec-val">${car.body}</div></div>
+    <div class="modal-spec-item"><div class="modal-spec-label">Color</div><div class="modal-spec-val">${car.color}</div></div>`;
+  const svgEl = document.getElementById('modalCarSvg');
+  svgEl.style.background = `linear-gradient(135deg, #dde4f0 0%, #c8d2e4 100%)`;
+  drawCarSVG(svgEl, car);
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e){
+  if(e && e.target !== document.getElementById('modalBg') && !e.target.classList.contains('modal-close')) return;
+  document.getElementById('modalBg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// init
+renderCards(cars);
+</script>
+</body>
+</html>
